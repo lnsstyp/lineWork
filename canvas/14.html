@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rubber bands with layered elements</title>
+
+  <style>
+    body{
+      background: rgba(100, 145, 250, 0.3);
+    }
+    #canvas{
+      margin-left: 20px;
+      margin-right: 0;
+      margin-bottom: 20px;
+      border: thin solid #aaaaaa;
+      cursor: crosshair;
+      padding: 0;
+    }
+    #controls{
+      margin: 20px 0px 20px 20px;
+    }
+    #rubberbandDiv{
+      position: absolute;
+      border: 3px solid blue;
+      cursor: crosshair;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <input type="button" value="Fade Out" id="fadeButton">
+  </div>
+  <div id="rubberbandDiv"></div>
+  <canvas id="canvas" width="700" height="520">Canvas not supported</canvas>
+  <script type="text/javascript">
+    var canvas = document.getElementById('canvas'),
+      context = canvas.getContext("2d"),
+      image = new Image(),
+      fadeButton = document.getElementById('fadeButton'),
+      originalImageData = null,
+      interval = null;
+
+    function increaseTransparency (imagedata, steps) {
+      var alpha, currentAlpha, step, length = imagedata.data.length;
+      for (var i = 3; i < length; i += 4) {
+        alpha = originalImageData.data[i];
+        if (alpha > 0 && imagedata.data[i] > 0) {
+          currentAlpha = imagedata.data[i];
+          step = Math.ceil(alpha / steps);
+          if(currentAlpha - step > 0){
+            imagedata.data[i] -= step;
+          }else{
+            imagedata.data[i] = 0;
+          }
+        };
+      };
+    }
+
+    function fadeOut (context, imagedata, x, y, steps, millisecondsPerStep) {
+      var frame = 0,
+        lenght = imagedata.data.lenght;
+      interval = setInterval(function () {
+        frame++;
+        if (frame > steps) {
+          clearInterval(interval);
+          animationComplete();
+        }else{
+          increaseTransparency(imagedata, steps);
+          context.putImageData(imagedata, x, y);
+        }
+      }, millisecondsPerStep);
+    }
+
+    function animationComplete () {
+      setTimeout(function () {
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      }, 1000);
+    }
+
+    fadeButton.onclick = function () {
+      fadeOut(context, context.getImageData(0, 0, canvas.width, canvas.height), 0, 0, 360, 1000 / 60);
+    }
+    image.src = 'images/curved-road.jpg';
+    image.onload = function () {
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      originalImageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+  </script>
+</body>
+</html>

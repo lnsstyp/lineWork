@@ -1,0 +1,286 @@
+html{
+  height: 100%;
+}
+body{
+  margin: 0px;
+  height: 100%;
+  background:
+  radial-gradient(hsl(0, 100%, 27%) 4%, hsl(0, 100%, 18%) 9%, hsla(0, 100%, 20%, 0) 9%) 0 0,
+  radial-gradient(hsl(0, 100%, 27%) 4%, hsl(0, 100%, 18%) 8%, hsla(0, 100%, 20%, 0) 10%) 50px 50px,
+  radial-gradient(hsla(0, 100%, 30%, 0.8) 20%, hsla(0, 100%, 20%, 0)) 50px 0,
+  radial-gradient(hsla(0, 100%, 30%, 0.8) 20%, hsla(0, 100%, 20%, 0)) 0 50px,
+  radial-gradient(hsla(0, 100%, 20%, 1) 35%, hsla(0, 100%, 20%, 0) 60%) 50px 0,
+  radial-gradient(hsla(0, 100%, 20%, 1) 35%, hsla(0, 100%, 20%, 0) 60%) 100px 50px,
+  radial-gradient(hsla(0, 100%, 15%, 0.7), hsla(0, 100%, 20%, 0)) 0 0,
+  radial-gradient(hsla(0, 100%, 15%, 0.7), hsla(0, 100%, 20%, 0)) 50px 50px,
+  linear-gradient(45deg, hsla(0, 100%, 20%, 0) 49%, hsla(0, 100%, 0%, 1) 50%, hsla(0, 100%, 20%, 0) 70%) 0 0,
+  linear-gradient(-45deg, hsla(0, 100%, 20%, 0) 49%, hsla(0, 100%, 0%, 1) 50%, hsla(0, 100%, 20%, 0) 70%) 0 0;
+  background-color: #300; 
+  background-size: 100px 100px;
+}
+body, main::before{
+  margin: 0;
+}
+.d3 a{
+
+}
+.d3 a:hover{
+  /* font: 150%/1.5 Baskerville, Palatino, serif; */
+  font: 150% Baskerville, Palatino, serif;
+}
+.d3{
+  display: none;
+  cursor: pointer;
+  width: 33.4%;
+  height: 25%;
+  font: 150%/1.6 Baskerville, Palatino, serif;
+  position: relative;
+  background: #58a;
+  background: linear-gradient(-150deg, transparent 1.5em, #58a 0);
+  border-radius: .5em;
+  margin-top: -20%;
+  margin-left: 30%;
+}
+.d3::before{
+  content: '';
+  position: absolute;
+  top: 0;right: 0;
+  background: linear-gradient(to left bottom, transparent 50%, rgba(0,0,0,.2) 0, rgba(0,0,0,.4)) 100% 0 no-repeat;
+  height: 3em;
+  width: 1.73em;
+  transform-origin: bottom right;
+  transform: translateY(-1.3em) rotate(-30deg);
+  border-bottom-left-radius: inherit;
+  box-shadow: -.2em .2em .3em -.1em rgba(0,0,0,.15);
+}
+.d7{
+  padding-top: 5%;
+  padding-left: 12%;
+  color: hsl(210, 13%, 30%);
+  text-shadow: 0 .03em .03em hsla(0, 0%, 100%, .8);
+}
+.d8{
+  padding-top: 5%;
+  padding-left: 12%;
+  color: hsl(210, 13%, 75%);
+  text-shadow: 0 -1px 1px black;
+}
+img#imgone, img#imgtwo{
+  margin: 0px;
+  padding: 0px;
+  width: 50%;
+  /*height: 955px;*/
+  height: 100%;
+  opacity: 0;
+}
+.common{
+  background:none;
+  position:absolute;
+  z-index:-999;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+}
+#data{
+  position:fixed;
+  _position:absolut;
+  top:0px;
+  left:0px;
+  width:150px;
+  border:1px #ccc solid;
+  z-index:999;
+  text-align: center;
+  line-height: 30px;
+  height:30px;
+  font-size:12px;
+}
+input{
+  position:fixed;
+  _position:absolute;
+  top:10px;
+  left:500px;
+  width:80px;
+  border:1px #e8e8e8 solid;
+  box-shadow: 0px 0px 10px #5fffBA;
+  z-index:999;
+  text-align: center;
+  line-height: 30px;
+  height:30px;
+  font-size:12px;
+  background-color:#5CCCBA;
+}
+.stopAnimate{
+  font-size: 1.2em;
+  font-weight: bold;
+  width: 80px;
+  height: 50px;
+  background:yellowgreen;
+  border:10px solid #655;
+  outline: 5px dashed deeppink;
+  border-radius: 10px;
+}
+#my3dspace{
+  -webkit-perspective: 3000;
+  -webkit-perspective-origin: 50% 50%;
+  overflow:hidden;
+  height: inherit;
+  /*position: relative;*/
+}
+
+#pagegroup{
+  width:100%;
+  /*height:955px;*/
+  height: 100%;
+  margin:0 auto;
+  -webkit-transform-style:preserve-3d;
+  position: relative;
+}
+.opendoor{
+  background-color: black;
+  color:white;
+  font-weight:bold;
+  font-size:360px;
+  line-height:360px;
+  text-align:center;
+}
+#imgone{
+  -webkit-transform-origin:left;
+  -moz-transform-origin:left;
+  -ms-transform-origin:left;
+  -webkit-transition: -webkit-transform 2s linear;
+  -moz-transition: -moz-transform 2s linear;
+  -ms-transition: -ms-transform 2s linear;
+}
+#imgtwo{
+  -webkit-transform-origin:right;
+  -moz-transform-origin:right;
+  -ms-transform-origin:right;
+  -webkit-transition: -webkit-transform 2s linear;
+  -moz-transition: -moz-transform 2s linear;
+  -ms-transition: -ms-transform 2s linear;
+}
+#page2,#page3,#page4,#page5,#page6{
+  -webkit-transform-origin:bottom;
+  -webkit-transition: -webkit-transform 1s linear;
+  -webkit-transform: rotateX(90deg);
+}
+#introduce{
+  display: none;
+  position: absolute;
+  font-weight: bold;
+  left: 30%;
+  top: 10%;
+}
+.highlinght{
+  text-shadow: 2px 2px 2px #BC83C3;
+  -webkit-animation: 1.5s blink-smooth 3 steps(1);
+  background: -webkit-gradient(linear,left top,left bottom,from(#FF0052),to(#802F7B));
+  -webkit-background-clip: text;
+}
+@-webkit-keyframes blink-smooth{
+  50%{
+    color: transparent;
+  }
+}
+
+h2{
+  font-family: Courier New;
+  width: 0px;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: .05em solid transparent;
+  color: red;
+}
+
+#counts{
+  position: absolute;
+  left: 20%;
+  bottom: 0%;
+  color: rgba(0, 255, 60, 0.5);
+  background-image: -webkit-gradient(linear, 0 0, right bottom, from(rgba(200, 255, 0, 1)), to(rgba(0, 200, 0, 1)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.path{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    text-align: center;
+    /* background-color: brown; */
+    padding: 20px;
+    float: right;
+    /* margin-top: -130px; */
+    position: absolute;
+    top: 0px;
+    right: 10%;
+    /* margin-right: 10%; */
+}
+.avatar{
+    display: block;
+    /* margin: calc(50% - 16px) auto 0; */
+    margin: calc(50% - 58px) auto 0;
+    animation: spin 3s infinite linear;
+}
+.my_img{
+    -webkit-clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    transition: 1s -webkit-clip-path;
+}
+.my_img:hover{
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+@keyframes spin{
+    from{
+        transform: rotate(0turn)
+                    translateY(-60px)
+                    rotate(1turn);
+    }
+    to{
+        transform: rotate(1turn)
+                    translateY(-60px)
+                    rotate(0turn);
+    }
+}
+@-webkit-keyframes typing{
+  from{
+    width: 0;
+  }
+}
+@-webkit-keyframes caret{
+  50%{
+    border-color: currentColor;
+  }
+}
+
+@-moz-keyframes typing{
+  from{
+    width: 0;
+  }
+}
+@-moz-keyframes caret{
+  50%{
+    border-color: currentColor;
+  }
+}
+
+@-ms-keyframes typing{
+  from{
+    width: 0;
+  }
+}
+@-ms-keyframes caret{
+  50%{
+    border-color: currentColor;
+  }
+}
+
+@keyframes typing{
+  from{
+    width: 0;
+  }
+}
+@keyframes caret{
+  50%{
+    border-color: currentColor;
+  }
+}

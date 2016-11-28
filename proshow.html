@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+  <title>带有分散效果的瀑布流</title>
+  <style type="text/css">
+    #main{
+      position: relative;
+    }
+    .pin{
+      padding: 15px 0 0 15px;
+      float:left;
+    }
+    .box{
+      padding: 10px;
+      border:1px solid #ccc;
+      box-shadow: 0 0 6px #ccc;
+      border-radius: 5px;
+    }
+    .box img{
+      width: 362px;
+      height:auto;
+    }
+  </style>
+</head>
+<body>
+<div id="main">
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/1.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/2.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/3.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/4.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/5.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/6.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/7.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/8.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/9.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/10.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/11.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/12.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/13.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/14.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/15.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/16.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/17.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/18.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/19.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/20.jpg"/>
+        </div>
+    </div>
+    <div class="pin">
+        <div class="box">
+            <img src="./images/picfalls/21.jpg"/>
+        </div>
+    </div>
+</div>
+<script>
+$(function () {
+  $( window ).on( "load", function(){
+    waterfall();
+    var dataInt={'data':[{'src':'1.jpg'},{'src':'2.jpg'},{'src':'3.jpg'},{'src':'4.jpg'},{'src':'5.jpg'},{'src':'6.jpg'},{'src':'7.jpg'},{'src':'8.jpg'},{'src':'9.jpg'},{'src':'10.jpg'},{'src':'11.jpg'},{'src':'12.jpg'},{'src':'13.jpg'},{'src':'14.jpg'},{'src':'15.jpg'},{'src':'16.jpg'},{'src':'17.jpg'},{'src':'18.jpg'},{'src':'19.jpg'},{'src':'20.jpg'},{'src':'21.jpg'}]};
+    window.onscroll=function(){
+    // 拖动滚动条时
+      var a = checkscrollside();
+        if(a){
+        $.each(dataInt.data,function(key,value){
+          var oBox = $('<div>').addClass('pin').appendTo($('#main'));
+          var oPic = $('<div>').addClass('box').appendTo($(oBox));
+          $('<img>').attr('src','images/picfalls/'+$(value).attr('src')).appendTo(oPic);
+        });
+        waterfall();
+      }
+    }
+    window.onresize = function () {
+      throttle(waterfall);
+    }
+  });
+});
+function waterfall(){
+  // 计算及定位数据块显示分散效果
+  var $boxs = $('#main>div');
+  var w = $boxs.eq(0).outerWidth();
+  var cols = Math.floor($(window).width()/w);
+  $('#main').width(w*cols).css('margin','0 auto');
+  var hArr = [];
+  $boxs.each(function(index,value){
+    var h = $boxs.eq(index).outerHeight();
+    if(index<cols){
+      hArr[index]=h;
+    }else{
+      var minH = Math.min.apply(null,hArr);
+      var minHIndex = $.inArray(minH,hArr);
+      $(value).css({
+        'position' : 'absolute',
+        'top' : minH + 'px',
+        'left' : minHIndex*w + 'px'
+      });
+      hArr[minHIndex] += $boxs.eq(index).outerHeight();
+    }
+  });
+}
+
+function checkscrollside(){
+  // 检测是否具备了加载数据块的条件
+  var $lastBox = $("#main>div").last();
+  //alert($lastBox.offset().top);
+  //alert(Math.floor($lastBox.outerHeight()/2));
+  var lastBoxDis = $lastBox.offset().top+Math.floor($lastBox.outerHeight()/2);
+  var scrollTop = $(window).scrollTop();
+  var documentH = $(window).height();
+  return lastBoxDis < scrollTop + documentH;
+}
+function throttle (method) {
+  clearTimeout(method.tId);
+  method.tId = setTimeout(function () {
+    method();
+  }, 500);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Drawing Lines with Rubber Bands</title>
+  <style type="text/css">
+    #controls{
+      position: absolute;
+      left: 25px;
+      top: 25px;
+    }
+    #canvas{
+      background: #ffffff;
+      cursor: pointer;
+      margin-left: 10px;
+      box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+      -webkit-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+      -moz-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="600" height="400">Canvas not surpported</canvas>
+  <div id="controls">
+    Stroke color: <select name="" id="strokeStyleSelect">
+      <option value="red">red</option>
+      <option value="green">green</option>
+      <option value="blue">blue</option>
+      <option value="orange">orange</option>
+      <option value="cornflowerblue" selected>cornflowerblue</option>
+      <option value="goldenrod">goldenrod</option>
+      <option value="navy">navy</option>
+      <option value="purple">purple</option>
+    </select>
+    Fill color: <select name="" id="fillStyleSelect">
+      <option value="red">red</option>
+      <option value="green">green</option>
+      <option value="blue">blue</option>
+      <option value="orange">orange</option>
+      <option value="cornflowerblue" selected>cornflowerblue</option>
+      <option value="goldenrod">goldenrod</option>
+      <option value="navy">navy</option>
+      <option value="purple">purple</option>
+    </select>
+    sides: <select name="" id="sidesSelect">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5" selected>5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+    </select><br>
+    startAngle: <select name="" id="startAngleSelect">
+      <option value="0">0</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="30">30</option>
+      <option value="40">40</option>
+      <option value="50" selected>50</option>
+      <option value="60">60</option>
+      <option value="70">70</option>
+      <option value="80">80</option>
+    </select>
+    Gurdewires:
+    <input type="checkbox" checked id="guidewireCheckbox">
+    Fill:
+    <input type="checkbox" id="fillCheckbox">
+    <input type="button" value="Erase all" id="eraseAllButton">
+    Edit:
+    <input type="checkbox" id="editCheckbox">
+  </div>
+  <script type="text/javascript">
+    var canvas = document.getElementById('canvas'),
+      context = canvas.getContext("2d"),
+      sidesSelect = document.getElementById('sidesSelect'),
+      startAngleSelect = document.getElementById('startAngleSelect'),
+      fillCheckbox = document.getElementById('fillCheckbox'),
+      eraseAllButton = document.getElementById('eraseAllButton'),
+      strokeStyleSelect = document.getElementById('strokeStyleSelect'),
+      fillStyleSelect = document.getElementById('fillStyleSelect'),
+      guidewireCheckbox = document.getElementById('guidewireCheckbox'),
+      editCheckbox = document.getElementById('editCheckbox'),
+      drawingSurfaceImageData,
+      dragging = false,
+      draggingOffsetX,
+      draggingOffsetY,
+      sides = 8,
+      startAngle = 0,
+      editing = false,
+      guidewires = guidewireCheckbox.checked,
+      mousedown = {},
+      rubberbandRect = {},
+      polygons = [],
+      Point = function (x, y) {
+        this.x = x;
+        this.y = y;
+      };
+
+    var Polygon = function (centerX, centerY, radius, sides, startAngle, strokeStyle, fillStyle, filled) {
+      this.x = centerX;
+      this.y = centerY;
+      this.radius = radius;
+      this.sides = sides;
+      this.startAngle = startAngle;
+      this.strokeStyle = strokeStyle;
+      this.fillStyle = fillStyle;
+      this.filled =filled;
+    };
+
+    Polygon.prototype = {
+      getPoints: function () {
+        var points = [],
+          angle = this.startAngle || 0;
+        for (var i = 0; i < this.sides; ++i) {
+          points.push(new Point(this.x + this.radius * (Math.sin(angle)), this.y - this.radius * Math.cos(angle)));
+          angle += 2 * Math.PI / this.sides;
+        };
+        return points;
+      },
+      createPath: function (context) {
+        var points = this.getPoints();
+        context.beginPath();
+        context.moveTo(points[0].x, points[0].y);
+        for (var i = 0; i < this.sides; ++i) {
+          context.lineTo(points[i].x, points[i].y);
+        };
+        context.closePath();
+      },
+      stroke: function (context) {
+        context.save();
+        this.createPath(context);
+        context.strokeStyle = this.strokeStyle;
+        context.stroke();
+        context.restore();
+      },
+      fill: function (context) {
+        if (this.filled) {
+          context.save();
+          this.createPath(context);
+          context.fillStyle = this.fillStyle;
+          context.fill();
+          context.restore();
+        };
+        /*context.save();
+        this.createPath(context);
+        context.fillStyle = this.fillStyle;
+        context.fill();
+        context.restore();*/
+      },
+      move: function (x, y) {
+        this.x = x;
+        this.y = y;
+      }
+    }
+
+    function getPolygonPoints (centerX, centerY, radius, sides, startAngle) {
+
+      var points = [],
+        angle = startAngle || 0;
+      for (var i = 0; i < sides; ++i) {
+        //points.push(new Point(centerX + radius * Math.sin(angle), centerY - radius * Math.cos(angle)));
+        points.push(new Point(centerX + radius * Math.sin(angle), centerY - radius * Math.cos(angle)));
+        angle += 2 * Math.PI / sides;
+      };
+      return points;
+    }
+
+    function createPolygonPath (centerX, centerY, radius, sides, startAngle) {
+
+      var points = getPolygonPoints(centerX, centerY, radius, sides, startAngle);
+      context.beginPath();
+      context.moveTo(points[0].x, points[0].y);
+      for (var i = 0; i < sides; ++i) {
+        context.lineTo(points[i].x, points[i].y);
+      };
+      context.closePath();
+    }
+
+    function drawRubberbandShape (loc, sides, startAngle) {
+      var polygon = new Polygon(mousedown.x, mousedown.y, rubberbandRect.width, parseInt(sidesSelect.value), (Math.PI / 180) * parseInt(startAngleSelect.value), context.strokeStyle, context.fillStyle, fillCheckbox.checked);
+      drawPolygon(polygon);
+      if(!dragging){
+        //绘图完毕会将刚绘制好的图形添加到数组里面保存起来
+        polygons.push(polygon);
+      }
+
+    }
+
+    function drawGrid (color, stepx, stepy) {
+      context.save();
+      context.strokeStyle = color;
+      context.lineWidth = 0.5;
+      context.shadowColor = 'rgba(0, 0, 0, 0)';
+      context.shadowOffsetX = 0;
+      context.shadowOffsetY = 0;
+      context.shadowBlur = 0;
+      for (var i = stepx + 0.5; i < context.canvas.width; i += stepx) {
+        context.beginPath();
+        context.moveTo(i, 0);
+        context.lineTo(i, context.canvas.height);
+        context.stroke();
+      };
+      for (var i = stepy + 0.5; i < context.canvas.height; i += stepy) {
+        context.beginPath();
+        context.moveTo(0, i);
+        context.lineTo(context.canvas.width, i);
+        context.stroke();
+      };
+      context.restore();
+    }
+
+    function windowToCanvas (x, y) {
+      var bbox = canvas.getBoundingClientRect();
+      return {
+        x: x - bbox.left * (canvas.width / bbox.width),
+        y: y - bbox.top * (canvas.height / bbox.height)
+      }
+    }
+
+    function saveDrawingSurface () {
+      drawingSurfaceImageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    function restoreDrawingSurface () {
+      context.putImageData(drawingSurfaceImageData, 0, 0);
+    }
+
+    function drawPolygon (polygon) {
+      context.beginPath();
+      polygon.createPath(context);
+      polygon.stroke(context);
+      if (fillCheckbox.checked) {
+        polygon.fill(context);
+      };
+    }
+
+    function updateRubberbandRectangle (loc) {
+      rubberbandRect.width = Math.abs(loc.x - mousedown.x);
+      rubberbandRect.height = Math.abs(loc.y - mousedown.y);
+      if (loc.x > mousedown.x) {
+        rubberbandRect.left = mousedown.x;
+      }else{
+        rubberbandRect.left = loc.x;
+      }
+      if (loc.y > mousedown.y) {
+        rubberbandRect.top = mousedown.y;
+      }else{
+        rubberbandRect.top = loc.y;
+      }
+    }
+
+    function updateRubberband (loc, sides, startAngle) {
+      updateRubberbandRectangle(loc);
+      drawRubberbandShape(loc, sides, startAngle);
+    }
+
+    function drawHorizontalLine (y) {
+      context.beginPath();
+      context.moveTo(0, y + 0.5);
+      context.lineTo(context.canvas.width, y + 0.5);
+      context.stroke();
+    }
+
+    function drawVerticalLine (x) {
+      context.beginPath();
+      context.moveTo(x + 0.5, 0);
+      context.lineTo(x + 0.5, context.canvas.height);
+      context.stroke();
+    }
+
+    function drawGuidewires (x, y) {
+      context.save();
+      context.strokeStyle = 'rgba(0, 0, 230, 0.4)';
+      context.lineWidth = 0.5;
+      drawVerticalLine(x);
+      drawHorizontalLine(y);
+      context.restore();
+    }
+
+    function drawPolygons () {
+      polygons.forEach(function (polygon) {
+        drawPolygon(polygon);
+      });
+    }
+
+    function startDragging (loc) {
+      saveDrawingSurface();
+      mousedown.x = loc.x;
+      mousedown.y = loc.y;
+    }
+
+    function startEditing () {
+      canvas.style.cursor = 'pointer';
+      editing = true;
+    }
+
+    function stopEditing () {
+      canvas.style.cursor = 'crosshair';
+      editing = false;
+    }
+
+    canvas.onmousedown = function (e) {
+      var loc = windowToCanvas(e.clientX, e.clientY);
+      e.preventDefault();
+      if (editing) {
+        polygons.forEach(function (polygon) {
+          polygon.createPath(context);
+          if (context.isPointInPath(loc.x, loc.y)) {
+            startDragging(loc);
+            dragging = polygon;
+            draggingOffsetX = loc.x - polygon.x;
+            draggingOffsetY = loc.y - polygon.y;
+            return;
+          };
+        });
+      }else{
+        startDragging(loc);
+        dragging = true;
+      }
+    }
+
+    canvas.onmousemove = function (e) {
+      var loc = windowToCanvas(e.clientX, e.clientY);
+      e.preventDefault();
+      if(editing && dragging){
+        //dragging表示当前移动的对象，在onmousedown中赋值，重新设置他的参数，用来移动
+        dragging.x = loc.x - draggingOffsetX;
+        dragging.y = loc.y - draggingOffsetY;
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        drawGrid('lightgray', 10, 10);
+        drawPolygons();
+      }else{
+        if (dragging) {
+          restoreDrawingSurface();
+          updateRubberband(loc, sides, startAngle);
+          if(guidewires){
+            drawGuidewires(mousedown.x, mousedown.y);
+          }
+        };
+      }
+    }
+
+    canvas.onmouseup = function (e) {
+      var loc = windowToCanvas(e.clientX, e.clientY);
+      dragging = false;
+      if(editing){
+
+      }else{
+        restoreDrawingSurface();
+        updateRubberband(loc);
+      }
+    }
+
+    eraseAllButton.onclick = function (e) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      drawGrid('lightgray', 10, 10);
+      context.strokeStyle = strokeStyleSelect.value;
+      saveDrawingSurface();
+      polygons = [];
+    }
+
+    strokeStyleSelect.onchange = function (e) {
+      context.strokeStyle = strokeStyleSelect.value;
+    }
+
+    fillStyleSelect.onchange = function (e) {
+      context.fillStyle = fillStyleSelect.value;
+    }
+
+    editCheckbox.onchange = function (e) {
+      if (editCheckbox.checked) {
+        console.log('开始编辑');
+        startEditing();
+      }else{
+        console.log('结束编辑');
+        stopEditing();
+      }
+    }
+
+    guidewireCheckbox.onchange = function (e) {
+      guidewires = guidewireCheckbox.checked;
+    }
+
+    context.strokeStyle = strokeStyleSelect.value;
+    context.fillStyle = fillStyleSelect.value;
+    context.shadowColor = 'rgba(0, 0, 0, 0.4)';
+    context.shadowOffsetX = 2;
+    context.shadowOffsetY = 2;
+    context.shadowBlur = 4;
+
+    drawGrid('lightgray', 10, 10);
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style type="text/css">
+    #canvasapp2{
+      width: 860px;
+      margin: 160px auto 0;
+    }
+    #leftbar{
+      margin-top:100px;
+      width: 50px;
+      float: left;
+    }
+    #rightbar{
+      float: right;
+      width: 808px;
+      height: 80vh;
+    }
+    #leftbar ul, #leftbar li{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    #leftbar > ul{
+      width: 100px;
+      margin-left: -50px;
+    }
+    #leftbar > ul > li{
+      margin-bottom: 10px;
+    }
+    #leftbar li{
+      position: relative;
+    }
+    #leftbar li a{
+      border-radius: 2px;
+      text-decoration: none;
+      color: #333;
+      display: inline-block;
+      text-align: center;
+      height: 32px;
+      line-height: 32px;
+      width: 100px;
+      background-color: #a4d0c0;
+      margin-bottom: 1px;
+      margin-top: 1px;
+    }
+    #leftbar li a:hover{
+      background-color: #f60;
+      color: #fff;
+    }
+    #leftbar .subnav{
+      height: 0;
+      overflow: hidden;
+      /* position: absolute; */
+      /* top: 32px;
+      left: 0; */
+    }
+    #leftbar .subnav a{
+      border-radius: 16px;
+      text-decoration: none;
+      color: #333;
+      display: inline-block;
+      text-align: center;
+      height: 32px;
+      line-height: 32px;
+      width: 100px;
+      background-color: #ecc6dc;
+      margin-bottom: 1px;
+      margin-top: 1px;
+    }
+  </style>
+  <script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+</head>
+<body>
+  <div id="canvasapp1">
+  <div id="leftbar">
+    <ul>
+      <li class="sdfg"><a href="#" class="mainav">canvas-1</a>
+        <ul class="subnav">
+          <li><a href="canvas/1.html" target="view_frame">1-1</a></li>
+          <li><a href="canvas/2.html" target="view_frame">1-2</a></li>
+          <li><a href="canvas/3.html" target="view_frame">1-3</a></li>
+        </ul>
+      </li>
+      <li><a href="#" class="mainav">canvas-2</a>
+        <ul class="subnav">
+          <li><a href="canvas/4.html" target="view_frame">2-1</a></li>
+          <li><a href="canvas/5.html" target="view_frame">2-2</a></li>
+          <li><a href="canvas/6.html" target="view_frame">2-3</a></li>
+        </ul>
+      </li>
+      <li><a href="#" class="mainav">canvas-3</a>
+        <ul class="subnav">
+          <li><a href="canvas/7.html" target="view_frame">3-1</a></li>
+          <li><a href="canvas/8.html" target="view_frame">3-2</a></li>
+          <li><a href="canvas/9.html" target="view_frame">3-3</a></li>
+        </ul>
+      </li>
+      <li><a href="#" class="mainav">canvas-4</a>
+        <ul class="subnav">
+          <li><a href="canvas/10.html" target="view_frame">4-1</a></li>
+          <li><a href="canvas/11.html" target="view_frame">4-2</a></li>
+          <li><a href="canvas/12.html" target="view_frame">4-3</a></li>
+        </ul>
+      </li>
+      <li><a href="#" class="mainav">canvas-5</a>
+        <ul class="subnav">
+          <li><a href="canvas/13.html" target="view_frame">5-1</a></li>
+          <li><a href="canvas/14.html" target="view_frame">5-2</a></li>
+          <li><a href="canvas/15.html" target="view_frame">5-3</a></li>
+        </ul>
+      </li>
+      <li><a href="#" class="mainav">canvas-6</a>
+        <ul class="subnav">
+          <li><a href="canvas/16.html" target="view_frame">6-1</a></li>
+          <li><a href="canvas/17.html" target="view_frame">6-2</a></li>
+          <li><a href="canvas/18.html" target="view_frame">6-3</a></li>
+        </ul>
+      </li>
+      <li><a href="#" class="mainav">canvas-7</a>
+        <ul class="subnav">
+          <li><a href="canvas/19.html" target="view_frame">7-1</a></li>
+          <li><a href="canvas/20.html" target="view_frame">7-2</a></li>
+          <li><a href="canvas/21.html" target="view_frame">7-3</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div id="rightbar">
+    <iframe src="canvas/1.html" width="98%" height="100%" frameborder="0" name="view_frame"></iframe>
+  </div>
+  </div>
+  <script type="text/javascript">
+    $(function () {
+      var aLi = $(".mainav");
+      var p, q;
+      for(var i=0; i<aLi.length; i++){
+        aLi.eq(i).mouseenter(function(){
+          clearTimeout(q);
+          $(".subnav").height(0);
+          //鼠标经过一级菜单，二级菜单动画下拉显示出来
+          var m = $(this).next();
+          if(m){
+            var This = m;
+            p = setTimeout(function(){
+              if(This[0].offsetHeight >= 102){
+                clearTimeout(p);
+                return;
+              }
+              This.height(This[0].offsetHeight + 17 + 'px');
+              var fun = arguments.callee;
+              p = setTimeout(function () {
+                fun();
+              }, 30);
+            },30);
+          }
+        });
+            //鼠标离开菜单，二级菜单动画收缩起来。    
+        aLi.eq(i).parent().mouseleave(function(){
+          clearTimeout(p);
+          var n = $(this).children(':last');
+          if(n){
+            var This = n;
+            q = setTimeout(function(){
+              if(This[0].offsetHeight <= 0){
+                clearTimeout(q);
+                return;
+              }
+              This.height(This[0].offsetHeight - 51 + 'px');
+              var fun = arguments.callee;
+              q = setTimeout(function () {
+                fun();
+              }, 30);
+            },30);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style type="text/css">
+    @font-face{
+        font-family: Ampersand;
+        src: local('Garamond-Italic'), local('Baskerville-Italic'), local('Goudy Old Style'), local('Palatino-Italic'), local('serif'), local('Book Antiqua');
+        unicode-range: U+26;
+    }
+    #csschange > div{
+      margin: 100px auto;
+    }
+    .image-slider{
+      position: relative;
+      /* display: inline-block; */
+    }
+    .image-slider > div{
+      position: absolute;
+      top: 0; bottom: 0; left: 0;
+      width: 50%;
+      overflow: hidden;
+    }
+    .image-slider img{
+      display: block;
+      -webkit-user-select: none;
+    }
+    .image-slider input{
+      position: absolute;
+      left: 0;
+      bottom: 10px;
+      width: 50%;
+      margin: 0;
+      filter: contrast(.5);
+      mix-blend-mode: luminosity;
+      transform: scale(2);
+      transform-origin: left bottom;
+    }
+    #wordpic, main::before{
+      background: url(images/wordpic.jpg);
+      margin: 0;
+      padding-top: calc(20vh - 5.1em);
+      font: 150%/1.4 Baskerville, Palatino, serif;
+      font-family: "华文行楷";
+    }
+    #wordpic{
+      margin: 0 auto;
+      width: 600px;
+      height: 216px;
+    }
+    main{
+      margin: 0px auto;
+      position: relative;
+      margin: 0 auto;
+      padding: 0.1em;
+      max-width: 19em;
+      border-radius: .3em;
+      box-shadow: 0 0 0 1px hsla(0,0%,100%,.3) inset,
+                  0 .5em 1em rgba(0, 0, 0, 0.6);
+      text-shadow: 0 1px 1px hsla(0,0%,100%,.3);
+      background: hsla(0, 0%, 100%, .3);
+      overflow: hidden;
+    }
+    main::before{
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      filter: blur(20px);
+      margin: -30px;
+      z-index: -1;
+    }
+    blockquote { font-style: italic }
+    blockquote cite { font-style: normal; }
+    .picmove{
+      width: 600px; height: 463px;
+      background: url(images/yard.jpg);
+      background-size: auto 100%;
+      animation: panoramic 5s linear infinite alternate;
+      animation-play-state: paused;
+    }
+    .picmove:hover, .picmove:focus{
+      animation-play-state: running;
+    }
+    @keyframes panoramic{
+      to{
+        background-position: 100% 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="image-slider">
+    <img src="images/imgSlide1.png" alt="Before" />
+    <img src="images/imgSlide2.png" alt="After" />
+  </div>
+  <div id="wordpic">
+    <main>
+      <blockquote>
+        "我在这张图片上面，你能看清楚我吗？是不是很好玩？"
+        <footer>-
+          <cite>
+            张海城,
+            一位伟大的人物
+          </cite>
+        </footer>
+      </blockquote>
+    </main>
+  </div>
+  <div class="picmove"></div>
+  <script type="text/javascript">
+    $$('.image-slider').forEach(function(slider){
+      var div = document.createElement('div');
+      var img = slider.querySelector('img');
+      slider.insertBefore(div, img);
+      div.appendChild(img);
+      var range = document.createElement('input');
+      range.type = 'range';
+      range.oninput = function(){
+        div.style.width = this.value + '%';
+        console.log(this.value);
+      }
+      slider.appendChild(range);
+    });
+    function $$(selector, context){
+      context = context || document;
+      var elements = context.querySelectorAll(selector);
+      return Array.prototype.slice.call(elements);
+    }
+  </script>
+</body>
+</html>

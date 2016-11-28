@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>使用jQuery与HTML 5开发拼图游戏</title>
+    <link rel="stylesheet" type="text/css" href="css/jigsaw.css">
+    <script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+    <script type="text/javascript" src="js/jigsawplugin.js"></script>
+</head>
+<body>
+    <div id="indexjigsaw">
+        <ul>
+            <li><input type="radio" id="Radio1" name="type" checked >容易</li>
+            <li><input type="radio" id="Radio2" name="type" >较难</li>
+            <li><input type="radio" id="Radio3" name="type" >最难</li>
+        </ul>
+        <ul class="ulimg">
+            <li class="focus"><img src="images/jigsaw1.jpg" alt="" class="img"></li>
+            <li class="defalut"><img src="images/jigsaw2.jpg" alt="" class="img"></li>
+            <li class="defalut"><img src="images/jigsaw3.jpg" alt="" class="img"></li>
+        </ul>
+        <div id="gamePanelContainer">
+            <div id="gamePanel"></div>
+        </div>
+        <div id="tip"></div>
+    </div>
+    <script type="text/javascript">
+      $(function() {
+          var level = 3;
+          var curimg = 0;
+          var arrImg = new Array("images/jigsaw1.jpg","images/jigsaw2.jpg","images/jigsaw3.jpg");
+          $("#indexjigsaw ul li input").each(function(i) {
+              $(this).bind('click', function() {
+                  switch(i){
+                      case 0:
+                          level = 3;
+                          break;
+                      case 1:
+                          level = 4;
+                          break;
+                      case 2:
+                          level = 5;
+                          break;
+                  }
+                  loadjisaw(level, arrImg[curimg]);
+              });
+          });
+          $("#indexjigsaw .ulimg li").each(function(i) {
+              $(this).bind("click", function(){
+                  clearCss();
+                  $(this).removeClass('focus');
+                  curimg = i;
+                  switch(i){
+                      case 0:
+                          loadjisaw(level, arrImg[0]);
+                          break;
+                      case 1:
+                          loadjisaw(level, arrImg[1]);
+                          break;
+                      case 2:
+                          loadjisaw(level, arrImg[2]);
+                          break;
+                  }
+              });
+          });
+          clearCss = function(){
+              $("#indexjigsaw .ulimg li").each(function() {
+                  $(this).removeClass('focus');
+                  $(this).addClass('defalut');
+              });
+          }
+          loadjisaw = function(level, url){
+              $("#tip").html("");
+              $("#gamePanel").empty();
+              $.jigsaw('gamePanel', url, 290, level, 16, function(){});
+          }
+          loadjisaw(level, arrImg[0]);
+      });
+
+    </script>
+</body>
+</html>

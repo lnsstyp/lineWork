@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style type="text/css">
+    #newsfast h3{
+      text-align: center;
+      font-size: 30px;
+    }
+    #newsfast h4{
+      text-indent: 4em;
+      margin: 30px 0 10px;
+    }
+    #newsfast p{
+      text-indent: 2em;
+      line-height: 1.4em;
+      padding: 0 30px;
+      font: arial,'\5b8b\4f53',sans-serif;
+    }
+    #newsfast ul{
+      list-style-type: none;
+      padding: 0px;
+      margin: 0px;
+    }
+    #newsfast ul li{
+      float: left;
+    }
+    #newsfast #cantainer{
+      position: relative;
+      width: 640px;
+      display: none;
+      margin-left: 110px;
+    }
+    #newsfast .video{
+      position: relative;
+    }
+    #newsfast .mediaplayer{
+      text-align: center;
+
+    }
+    #newsfast #ratetip{
+      position: absolute;
+      top: 25px;
+      margin-left: 130px;
+      color: #fff;
+    }
+    #newsfast #indexvideo{
+      margin: 0 auto;
+      background-color: #eaeaea;
+      border: 1px solid #666;
+    }
+    #newsfast #indexnav .focus{
+      border: 1px solid #666;
+    }
+    #newsfast #indexnav{
+      padding-left: 100px;
+      height: 35px;
+      line-height: 35px;
+      margin: 0 auto;
+    }
+    #newsfast #indexnav input{
+      border: none;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      outline: none;
+    }
+    #newsfast #indexnav .btn-slow{
+      width: 50px;
+      background: url(images/playback_slow.png) no-repeat center center;
+    }
+    #newsfast #indexnav .btn-play{
+      width: 50px;
+      background: url(images/playback_play.png) no-repeat center center;
+    }
+    #newsfast #indexnav .btn-pause{
+      width: 50px;
+      background: url(images/playback_pause.png) no-repeat center center;
+    }
+    #newsfast #indexnav .btn-quick{
+      width: 50px;
+      background: url(images/playback_quick.png) no-repeat center center;
+    }
+    #newsfast #indexnav .btn-return{
+      width: 50px;
+      background: url(images/playback_return.png) no-repeat center center;
+    }
+    #newsfast #indexnav .btn-pic{
+      width: 22px;
+      margin-right: 20px;
+      margin-left: 5px;
+      background: url(images/playback_pic.png) no-repeat center center;
+    }
+    #newsfast #hidecanvas{
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  </style>
+  <script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+</head>
+<body>
+    <h3>匆匆那年</h3>
+    <div class="mediaplayer">
+      <div class="video">
+        <video id="player" src="vedio/congcong.mp4" poster="images/ccnn.png" width="640" height="272" controls>
+            你的浏览不支持视频播放
+          </video>
+          <div id="ratetip"></div>
+      </div>
+      <div id="indexnav">
+        <ul>
+          <li><input type="button" id="btnSlow" class="btn-slow"></li>
+          <li><input type="button" id="btnPlay" class="btn-pause"></li>
+          <li><input type="button" id="btnQuick" class="btn-quick"></li>
+          <li><input type="button" id="btnReturn" class="btn-return"></li>
+          <li><input type="button" id="btnPic" class="btn-pic" title="截图"></li>
+          <li><span id="curtime">00:00</span>/<span id="duration">00:00</span></li>
+        </ul>
+      </div>
+      <div id="cantainer">
+        <canvas id="canvas"></canvas>
+        <input type="button" value="隐藏" id="hidecanvas">
+      </div>
+    </div>
+    <p>《匆匆那年》改编自九夜茴同名畅销小说，由姚婷婷执导，杨玏、何泓姗、白敬亭、蔡文静、杜维瀚主演。</p>
+    <h4>第1集 校服再丑，你再也穿不到了</h4>
+    <p>时光不会倒流，人生没有退路，犯过的错不能重新改正，每个人在时间面前都只能俯首称臣。陈寻已过而立之年，活在钢铁林立的大都市，他极度渴望时间能退回到90年代上学的时候。当年陈寻与乔燃和赵烨是三个生死相交的死党，三人一起放学一起玩乐，一次有人弄坏了游戏厅老板的游戏操纵健，三人吓得赶紧骑上自行车逃走，游戏厅老板闻讯从屋中冲了出来，朝着三人逃跑的方向破口大骂。读书的时光无聊之极，陈寻反对教导主任给全班安排晚自习，为了让所有人团结一致跟教导主任对抗，陈寻来到讲堂上慷慨陈词，许多学生纷纷表态支持陈寻，唯独性格内向的女生方茴没有表态，直到旁边的同学提醒她，她才傻乎乎地举手支持陈寻。乔燃一直以来对方茴有一种特别的感觉，一次在书店中乔燃遇到了方茴，方茴捧着一本书读得津津有味，乔燃认出了方茴手中的小说就是他一直追看的小说，方茴腼腆地与乔燃交谈，乔燃决定让方茴先看小说，方茴却将小说递到了乔燃手中。体育课上，有女同学欺负方茴，故意让方茴独自一人搬动体育器材，正在操场上跑步的乔燃来到方茴身边帮忙搬运体育器材，陈寻与赵烨跑了过来数落乔燃多管闲事，乔燃无可奈何离开方茴继续跑步，方茴独自一人在女生们的嬉笑声中搬动体育器材。弱者总是被排挤，方茴就是如此，陈寻觉得方茴是一个呆头呆脑的人，赵烨心生一计决定捉弄方茴。方茴上课回教室推开房门，搁在门上的水盆倒了下来淋湿了方茴半个身子，全班同学目睹方茴被捉弄的情景，所有人幸灾乐祸哈哈大笑。在众人的嘲笑声中，方茴转过身子一声不吭往回走，乔燃闻讯赶来责怪所有人捉弄方茴，心急如焚来到过道上追上方茴，方茴虽然受到莫大的侮辱，一如既往保持木讷的神色默默离去。方茴一直生活在周围人的排挤和猜忌中，却意外与新转学来的林嘉茉成为好友。为了逃避晚自习，陈寻捅电闸破坏学校正常用电，教导主任审问所有学生，学生们都不敢举报陈寻，方茴是班上最懦弱的学生，教导主任要求方茴透露捅电闸的学生名字，方茴面色木然声称不知情，教导主任见方茴也不肯说出捅电闸学生的名字，勃然大怒罚方茴去操场跑十圈步。陈寻等人被方茴抵死不招的精神感动，几人来到操场上陪着方茴一起跑步，跑完步一行五人坐在操场上休息，赵烨来了精神头提议众人结为金兰，乔燃对赵烨的行为哭笑不得，提醒赵烨说话的时候先温习一下语文功课。</p>
+    <p></p>
+    <p></p>
+  <script type="text/javascript">
+    var player = document.getElementById('player'),
+      btn = document.getElementById('video-btn'),
+      curtime = document.getElementById('curtime'),
+      time = document.getElementById('duration');
+    player.addEventListener('canplay',function(){
+      //player.play();
+      time.innerHTML = parseInt(player.duration / 60) + ":" + parseInt(player.duration % 60);
+      setInterval(function(){
+        var t = parseInt(player.currentTime);
+        var m = "00";
+        if (t > 59) {
+          m = Math.floor(t / 60);
+          t = t - m * 60;
+          if (m < 10) {
+            m = '0' + m;
+          };
+        };
+        if (t < 10) {
+          t = '0' + t.toString();
+        };
+        curtime.innerHTML = m + ":" + t;
+      }, 500);
+    });
+    var intSpeed = 1;
+    var intInterval, intTipInterval;
+    var $video = document.getElementById('player');
+    var int_plybckrate = $video.playbackRate;
+    var $canvas = document.getElementById('canvas');
+    var $ctx = $canvas.getContext("2d");
+    $(function() {
+      $("#hidecanvas").click(function() {
+        $("#cantainer").css('display', 'none');
+      });
+      $('#indexnav input[type="button"]').each(function(i){
+        $(this).bind('click', function() {
+          switch(i){
+            case 0:
+              if(!$video.paused){
+                int_plybckrate -= 0.1;
+                if(int_plybckrate < 0){
+                  int_plybckrate = 0;
+                }
+                intSpeed = Math.round(int_plybckrate * 100) / 100;
+                $("#ratetip").html("慢放速率：" + parseInt(intSpeed * 100) + "%");
+              }
+              break;
+            case 1:
+              if($video.paused){
+                $("#ratetip").html("正在播放");
+                $video.play();
+                $video.playbackRate = intSpeed;
+                $(this).attr('class', 'btn-play');
+              }else{
+                $("#ratetip").html("已经暂停");
+                $video.pause();
+                $(this).attr('class', 'btn-pause');
+              }
+              break;
+            case 2:
+              if(!$video.paused){
+                int_plybckrate += 0.1;
+                intSpeed = Math.round(int_plybckrate * 100) / 100;
+                $("#ratetip").html("快进速率：" + parseInt(intSpeed * 100) + "%");
+              }
+              break;
+            case 3:
+              $("#ratetip").html("点击回放");
+              if(!$video.paused){
+              clearInterval(intInterval);
+                intInterval = setInterval(function() {
+                  if(($video.currentTime < 1) || ($video.paused)){
+                    clearInterval(intInterval);
+                  }else{
+                    $video.currentTime -= 1;
+                  }
+                }, 500);
+              }
+              break;
+            case 4:
+              $("#ratetip").html("正在截图");
+              //if(!$video.paused){
+                $canvas.width = $video.videoWidth;
+                $canvas.height = $video.videoHeight;
+                $ctx.drawImage($video, 0, 0, $canvas.width, $canvas.height);
+                $("#cantainer").css('display', 'block');
+              //}
+              break;
+          }
+        });
+      });
+      $("#player").bind("timeupdate", function() {
+        $video.playbackRate = intSpeed;
+      }).bind("ended", function() {
+        $("#ratetip").html("播放结束");
+        $("#btnPlay").attr('class', 'btn-play');
+        intSpeed = 1;
+        int_plybckrate = intSpeed;
+        $video.currentTime = 0;
+      });
+      intTipInterval = setInterval(function() {
+        $("#ratetip").html("");
+      }, 5000);
+    });
+</script>
+</body>
+</html>

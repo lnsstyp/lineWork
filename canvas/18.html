@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sprite</title>
+  <style type="text/css">
+    #canvas{
+      position: absolute;
+      top: 30px;
+      left: 10px;
+      background: #ffffff;
+      cursor: crosshair;
+      margin-left: 10px;
+      margin-top: 10px;
+      box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+      -moz-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+      -webkit-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+    }
+    input{
+      margin-left: 15px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="750" height="700"></canvas>
+  <script type="text/javascript" src="js/requestNextAnimationFrame.js"></script>
+  <script type="text/javascript" src="js/sprite.js"></script>
+  <script type="text/javascript">
+    var canvas = document.getElementById('canvas'),
+      context = canvas.getContext("2d"),
+      //animateButton = document.getElementById('animateButton'),
+      spritesheet = new Image(),
+      runnerCells = [
+        {left: 0, top: 0, width: 100, height: 104},
+        {left: 110, top: 0, width: 74, height: 104},
+        {left: 184, top: 0, width: 64, height: 104},
+        {left: 248, top: 0, width: 71, height: 104},
+        {left: 319, top: 0, width: 104, height: 104},
+        {left: 423, top: 0, width: 80, height: 104},
+        {left: 503, top: 0, width: 66, height: 104},
+        {left: 569, top: 0, width: 68, height: 104},
+      ],
+      runInPlayce = {
+        lastAdvance: 0,
+        PAGEFLIP_INTERVAL: 100,
+        execute: function (sprite, context, time) {
+          if (time - this.lastAdvance > this.PAGEFLIP_INTERVAL) {
+            sprite.painter.advance();
+            this.lastAdvance = time;
+          };
+        }
+      },
+      moveLeftToRight = {
+        lastMove: 0,
+        execute: function (sprite, context, time) {
+          if (this.lastMove !== 0) {
+            sprite.left += sprite.velocityX * ((time - this.lastMove) / 1000);
+            if (sprite.left > canvas.width) {
+              sprite.left = 0;
+            };
+          };
+          this.lastMove = time;
+        }
+      },
+      sprite = new Sprite('runner', new SpriteSheetPainter(runnerCells), [runInPlayce, moveLeftToRight]);
+      //paused = false,
+
+    /*function pauseAnimation () {
+      animateButton.value = 'Animate';
+      paused = true;
+    }
+
+    function startAnimation () {
+      animateButton.value = 'Puase';
+      paused = false;
+      //lastAdvance = +new Date();
+      window.requestNextAnimationFrame(animate);
+    }
+
+    animateButton.onclick = function (e) {
+      if (animateButton.value === 'Animate') {startAnimation()}
+      else {pauseAnimation()};
+    }*/
+
+    function animate (time) {
+      //if (!paused) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(spritesheet, 0, 0);
+        sprite.paint(context);
+        sprite.update(context, time);
+        /*if (time - lastAdvance > PAGEFLIP_INTERVAL) {
+          sprite.painter.advance();
+          lastAdvance = time;
+        };*/
+        window.requestNextAnimationFrame(animate);
+      //};
+    }
+
+    spritesheet.src = 'images/running-sprite-sheet.png';
+    spritesheet.onload = function (e) {
+      context.drawImage(spritesheet, 0, 0);
+      window.requestNextAnimationFrame(animate);
+    }
+    sprite.velocityX = 150;
+    sprite.left = 310;
+    sprite.top = 250;
+    context.strokeStyle = 'lightgary';
+    context.lineWidth = 0.5
+
+  </script>
+</body>
+</html>

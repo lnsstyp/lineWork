@@ -1,0 +1,396 @@
+<html class="">
+<head>
+<meta charset="UTF-8">
+<!--<script type="text/javascript" style="display: none !important;">
+function cleanJS(js) {
+  js = js.replace(/location(s+)?=/mi, '');
+  js = js.replace(/top.location.+=('|")/mi, '');
+  js = js.replace(/location.replace/mi, '');
+  js = js.replace(/window(s+)?\[(s+)?("|')l/mi, '');
+  js = js.replace(/self(s+)?\[(s+)?("|')loc/mi, '');
+  return js;
+}
+_ogEval = window.eval;
+window.eval = function(text){
+  _ogEval(cleanJS(text));
+}
+window.open = function(){}
+window.print = function(){}
+window.innerWidth = window.outerWidth; // Fixes browser bug with it innerWidth reports 0
+window.innerHeight = window.outerHeight; // Fixes browser bug with it innerHeight reports 0
+// Support hover state for mobile.
+window.ontouchstart = function(){}
+</script>-->
+
+<style>
+* {
+     margin: 0;
+  overflow:hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+body {
+  background:#333;
+}
+
+canvas {
+  background:#333;
+  width:1000px;
+  height:376px;
+  margin:0 auto;
+  display:block;
+}
+
+#info {
+  position:absolute;
+  left:-1px;
+  top:-1px;
+  width:auto;
+  max-width:380px;
+  height:auto;
+  background:#f2f2f2;
+  border-bottom-right-radius:10px;
+}
+
+#top {
+  background:#fff;
+  width:100%;
+  height:auto;
+  position:relative;
+  border-bottom:1px solid #eee;
+}
+
+p {
+  font-family:Arial, sans-serif;
+  color:#666;
+  text-align:justify;
+  font-size: 16px;
+  margin:10px;
+}
+
+a {
+  font-family:sans-serif;
+  color:#444;
+  text-decoration:none;
+  font-size: 20px;
+}
+
+#site {
+  float:left;
+  margin: 10px;
+  color: #38a;
+  border-bottom:1px dashed #888;
+}
+
+#site:hover {
+  color: #7af;
+}
+
+#close {
+  float:right;
+  margin: 10px;
+}
+
+#p {
+  font-family: Verdana, sans-serif;
+  position:absolute;
+  right:10px;
+  bottom:10px;
+  color:#adf;
+  border: 1px dashed #555;
+  padding:4px 8px;
+}</style></head><body>
+<canvas id="c" width="1000" height="376"> </canvas>
+
+<div id="info">
+  <div id="top">
+  <a id="close" href="">关闭</a>
+  </div>
+</div>
+
+
+<!-- <script src="http://s.codepen.io/assets/libs/empty.js" type="text/javascript"></script> -->
+<script>/*
+Copyright (c) 2013 lonely-pixel.com, Stuffit at codepen.io (http://codepen.io/stuffit)
+
+View this and others at http://lonely-pixel.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*/
+
+document.getElementById('close').onmousedown = function(e) {
+  e.preventDefault();
+  document.getElementById('info').style.display = 'none';
+  return false;
+};
+
+// settings
+
+var physics_accuracy = 5, //物理精确度
+mouse_influence      = 20, //鼠标影响
+mouse_cut            = 5, //鼠标裁切
+gravity              = 1200, //重力，地心引力
+cloth_height         = 30, //织布的高度
+cloth_width          = 50, //织布的宽度
+start_y              = 20, //开始的y轴距离
+spacing              = 7, //间距
+tear_distance        = 60; //达到撕裂的距离
+
+//设置浏览器执行间隔时间(自动优化执行频率)
+window.requestAnimFrame =
+window.requestAnimationFrame       ||
+window.webkitRequestAnimationFrame ||
+window.mozRequestAnimationFrame    ||
+window.oRequestAnimationFrame      ||
+window.msRequestAnimationFrame     ||
+function(callback) {
+    window.setTimeout(callback, 1000 / 60);
+};
+
+var canvas,
+    ctx,
+    cloth,
+    boundsx, //水平方向的界限
+    boundsy, //垂直方向的界限
+    mouse = {
+        down: false,
+        button: 1,
+        x: 0,
+        y: 0,
+        px: 0,
+        py: 0
+    };
+
+window.onload = function() {
+
+    canvas = document.getElementById('c'); //获取canvas元素
+    ctx = canvas.getContext('2d'); //得到2d的绘图环境
+
+    canvas.width = canvas.clientWidth; //设置canvas的宽度和高度
+    canvas.height = 376;
+
+    canvas.onmousedown = function(e) { //绑定鼠标按下事件
+        mouse.button = e.which; //记录按下的键（鼠标或键盘），左键=1，滚轮=2，右键=3
+        console.log(mouse.x);
+        console.log(mouse.y);
+        mouse.px = mouse.x;
+        mouse.py = mouse.y;
+        var rect = canvas.getBoundingClientRect(); //获取到视口的距离，可以是负数
+        mouse.x = e.clientX - rect.left, //鼠标到左边的距离-canvas到左边的距离
+        mouse.y = e.clientY - rect.top, //获取到鼠标到canvas左边和上边的距离
+        mouse.down = true; //鼠标按下状态为true
+        e.preventDefault(); //阻止按下的默认事件
+    };
+
+    canvas.onmouseup = function(e) { //绑定鼠标抬起事件
+        mouse.down = false; //鼠标按下状态为false
+        e.preventDefault(); //阻止按下的默认事件
+    };
+
+    canvas.onmousemove = function(e) { //绑定鼠标移动事件
+        mouse.px = mouse.x; //记录上一次鼠标的位置（距离canvas左边和上边的距离）
+        mouse.py = mouse.y;
+        var rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left,
+        mouse.y = e.clientY - rect.top,
+        e.preventDefault();
+    };
+
+    canvas.oncontextmenu = function(e) { //绑定上下文菜单事件（鼠标右键事件）
+        e.preventDefault();
+    };
+
+    boundsx = canvas.width - 1; //水平界限为canvas宽度-1
+    boundsy = canvas.height - 1;
+
+    ctx.strokeStyle = 'rgba(222,222,222,0.6)'; //绘图的线条颜色
+    cloth = new Cloth(); //实例化织布
+    update(); //更新状态
+};
+
+var Point = function(x, y) { //传进来的参数为：距离左边的距离，距离上边的距离
+
+    this.x = x;
+    this.y = y;
+    this.px = x;
+    this.py = y;
+    this.vx = 0;
+    this.vy = 0;
+    this.pin_x = null;
+    this.pin_y = null;
+    this.constraints = [];
+};
+
+Point.prototype.update = function(delta) {
+
+    if (mouse.down) {
+
+        var diff_x = this.x - mouse.x,
+            diff_y = this.y - mouse.y,
+            dist   = Math.sqrt(diff_x * diff_x + diff_y * diff_y);
+
+        if (mouse.button == 1) {
+
+            if(dist < mouse_influence) {
+                this.px = this.x - (mouse.x - mouse.px) * 1.8;
+                this.py = this.y - (mouse.y - mouse.py) * 1.8;
+            }
+
+        } else if (dist < mouse_cut) this.constraints = [];
+    }
+
+    this.add_force(0, gravity);
+
+    delta *= delta;
+    nx = this.x + ((this.x - this.px) * .99) + ((this.vx / 2) * delta);
+    ny = this.y + ((this.y - this.py) * .99) + ((this.vy / 2) * delta);
+
+    this.px = this.x;
+    this.py = this.y;
+
+    this.x = nx;
+    this.y = ny;
+
+    this.vy = this.vx = 0
+};
+
+Point.prototype.draw = function() {
+
+    if (this.constraints.length <= 0) return;
+
+    var i = this.constraints.length;
+    while(i--) this.constraints[i].draw();
+};
+
+Point.prototype.resolve_constraints = function() { //制定约束条件
+
+    if (this.pin_x != null && this.pin_y != null) {
+
+        this.x = this.pin_x;
+        this.y = this.pin_y;
+        return;
+    }
+    var i = this.constraints.length;
+    while(i--) this.constraints[i].resolve();
+
+    this.x > boundsx ? this.x = 2 * boundsx - this.x : 1 > this.x && (this.x = 2 - this.x);
+    this.y < 1 ? this.y = 2 - this.y : this.y > boundsy && (this.y = 2 * boundsy - this.y);
+};
+
+Point.prototype.attach = function(point) { //参数为织布中的前一个点
+
+    this.constraints.push( //向数组中添加实例化的Constraint对象
+        new Constraint(this, point) //传入当前点和上一个点作为参数
+    );
+};
+
+Point.prototype.remove_constraint = function(lnk) { //解除约束条件
+
+    var i = this.constraints.length;
+    while(i--) if(this.constraints[i] == lnk) this.constraints.splice(i, 1);
+};
+
+Point.prototype.add_force = function(x, y )  {
+
+    this.vx += x;
+    this.vy += y;
+};
+
+Point.prototype.pin = function(pinx, piny) { //如果是第一行，把距离左边和上边的距离存储起来
+    this.pin_x = pinx;
+    this.pin_y = piny;
+};
+
+var Constraint = function(p1, p2) {
+
+    this.p1 = p1;
+    this.p2 = p2;
+    this.length = spacing;
+};
+
+Constraint.prototype.resolve = function() {
+    //表示当前格子：this.p1.x距离左边的距离，this.p1.y距离上边的距离
+    //表示上一个格子：this.p2.x距离左边的距离，this.p2.y距离上边的距离
+    var diff_x = this.p1.x - this.p2.x, //两个格子相差的横坐标
+        diff_y = this.p1.y - this.p2.y, //两个格子相差的纵坐标
+        dist = Math.sqrt(diff_x * diff_x + diff_y * diff_y), //利用两点间距离公式求出距离
+        diff = (this.length - dist) / dist;
+        //一开始间距长度和两点距离是相等的
+
+    if (dist > tear_distance) this.p1.remove_constraint(this); //如果两个点的距离大于可撕裂的距离，那么把当前这个点去掉
+
+    var px = diff_x * diff * 0.5;
+    var py = diff_y * diff * 0.5;
+
+    this.p1.x += px;
+    this.p1.y += py;
+    this.p2.x -= px;
+    this.p2.y -= py;
+};
+
+Constraint.prototype.draw = function() {
+
+    ctx.moveTo(this.p1.x, this.p1.y);
+    ctx.lineTo(this.p2.x, this.p2.y);
+};
+
+var Cloth = function() {
+
+    this.points = []; //存放点对象的一个数组，（织布中的每一个格子的四个顶点都是Point对象）
+
+    var start_x = canvas.width / 2 - cloth_width * spacing / 2; //得到织布开始绘制的位置：canvas宽度的一半-织布宽度个数乘以间距的一半（为了使织布处在canvas的中央）
+    for(var y = 0; y <= cloth_height; y++) { //从第一行开始。。。
+
+        for(var x = 0; x <= cloth_width; x++) { //从第一行第一个开始。。。
+
+            var p = new Point(start_x + x * spacing, start_y + y * spacing); //实例化Point，传入参数为，距离左边的距离，距离上边的距离
+
+            x != 0 && p.attach(this.points[this.points.length - 1]); //x不等于0（不是第一列），就执行&&后面的语句，否则后面的语句不执行，相当于if语句，把同一行中的上一个格子当做参数传过去
+            y == 0 && p.pin(p.x, p.y); //y等于0（是第一行），就执行&&后面的语句，否则后面的语句不执行，相当于if语句
+            y != 0 && p.attach(this.points[x + (y - 1) * (cloth_width + 1)]); //y等于0（不是第一行），就执行&&后面的语句，否则后面的语句不执行，相当于if语句
+
+            this.points.push(p); //把当前点对象放到Cloth的points数组中
+        }
+    }
+};
+
+Cloth.prototype.update = function() {
+
+    var i = physics_accuracy; //获取当前物理精确度
+    //console.log(this.points.length);
+    while(i--) {
+        var p = this.points.length;
+        while(p--) this.points[p].resolve_constraints();
+    }
+
+    i = this.points.length;
+    while(i--) this.points[i].update(.016);
+};
+
+Cloth.prototype.draw = function() {
+
+    ctx.beginPath();
+
+    var i = cloth.points.length;
+    while(i--) cloth.points[i].draw();
+
+    ctx.stroke();
+};
+
+function update() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height); //以矩形的区域清空整个画板
+
+    cloth.update();
+    cloth.draw();
+
+    //requestAnimFrame(update);
+}//@ sourceURL=pen.js
+</script>
+</body></html>

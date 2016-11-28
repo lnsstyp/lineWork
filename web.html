@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>页面导航</title>
+  <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="css/web.css">
+  <script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+</head>
+<body>
+  <div id="maskLayer"></div>
+  <div id="denglu">
+    <label for="username">用户名：</label>
+    <input type="text" id="username" placeholder="用户名/邮箱/手机号"><br>
+    <label for="password">密码：</label>
+    <input type="password" id="password">
+    <span id="lgmsg"></span>
+    <input type="button" value="登录" id="dlBtn"><input value="注册" type="button" id="lgBtn">
+    <div id="clslg"><span id="closelg"></span></div>
+  </div>
+  <div id="container">
+    <div id="leftDiv"></div>
+    <div id="centerDiv">
+      <div id="cenHead"></div>
+      <ul class="nav">
+        <li id="loadmpcontent"><a class="on" href="#">首　　页</a></li>
+        <li id="loadnewsfast"><a href="#">新闻快讯</a></li>
+        <li id="loadproshow"><a href="#">产品展示</a></li>
+        <li id="loadcsschange"><a href="#">售后服务</a></li>
+        <li id="loadcanvasapp"><a href="#">联系我们</a></li>
+      </ul>
+      <div id="mpcontent">
+        <div class="topList">
+          <ul>
+            <li class="top"><em>01</em>
+              <p><a href="cssAbsolute.html" >【前端学习】CSS绝对定位</a></p>
+            </li>
+            <li class="top"><em>02</em>
+              <p><a href="JQPosition.html">【前端学习】JQ定位导航</a></p>
+            </li>
+            <li class="top"><em>03</em>
+              <p><a href="html/bootstrap.html">【前端学习】bootstrap</a></p>
+            </li>
+            <li><em>04</em>
+              <p><a href="http://www.baidu.com/">【前端学习】后台线程</a></p>
+            </li>
+            <li><em>05</em>
+              <p><a href="http://www.baidu.com/">【前端学习】storage</a></p>
+            </li>
+            <li><em>06</em>
+              <p><a href="http://www.baidu.com/">【前端学习】websocket</a></p>
+            </li>
+            <li><em>07</em>
+              <p><a href="http://www.baidu.com/">【前段学习】canvas</a></p>
+            </li>
+          </ul>
+        </div>
+        <div class="banner">
+          <ul id="banner_imgs">
+            <li><a href="javascript:;"><img src="images/wo1.png" alt=""></a></li>
+            <li><a href="javascript:;"><img src="images/wo2.png" alt=""></a></li>
+            <li><a href="javascript:;"><img src="images/wo3.png" alt=""></a></li>
+            <li><a href="javascript:;"><img src="images/wo4.png" alt=""></a></li>
+            <li><a href="javascript:;"><img src="images/wo5.png" alt=""></a></li>
+          </ul>
+          <div class="number">
+            <a class="on" href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+          </div>
+        </div>
+        <div id="goodsmenu">
+          <div id="searchgood">
+            <label for="ordernum">订单号：</label><input type="text" id="ordernum">
+            <label for="orderdate">订单日期：</label><input type="date" id="orderdate">
+            <label for="ordertype">订单类型：</label><select name="" id="ordertype">
+              <option value="请选择">请选择</option>
+            </select>
+            <label for="ordername">产品名称：</label><select name="" id="ordername">
+              <option value="请选择">请选择</option>
+            </select>
+            <input type="button" value="查询" id="searchBtn"><br>
+            <input type="button" id="addOrder"><span id="orderOfAll"></span>
+            <div id="addList"></div>
+          </div>
+          <div id="goodsdetail">
+            <table id="orderdetail">
+              <tr>
+                <th>选项</th>
+                <th>订单号</th>
+                <th>订单日期</th>
+                <th>订单类型</th>
+                <th>产品名称</th>
+                <th>产品预览</th>
+                <th>购买人</th>
+                <th>性别</th>
+                <th>购买金额</th>
+                <th>手机号</th>
+              </tr>
+            </table>
+            <table>
+              <tr>
+                <td style="text-align:left; height:28px">
+                  <span><input id="chkAll" type="checkbox" class="checkBtn" />全选</span>
+                  <span><input id="reserveChk" type="checkbox" class="checkBtn" />反选</span>
+                  <span><input id="btnDel" type="button" value="删除" class="btn" /></span>
+                </td>
+              </tr>
+            </table>
+            <!-- <div class="page">
+              <a href="#">首页</a>
+              <a href="#">&lt;</a>
+              <a href="#" class="now">1</a>
+              <a href="#">2</a>
+              <a href="#">3</a>
+              <a href="#">...</a>
+              <a href="#">&gt;</a>
+              <a href="#">末页</a>
+            </div> -->
+            <!-- <div id="pageTool"></div> -->
+            <div id="pageToolbar"></div>
+            <img id="imgTip" class="clsImg" src="images/blank.jpg" />
+          </div>
+        </div>
+      </div>
+      <div id="newsfast"></div>
+      <iframe src="proshow.html" id="proshow" class="proshow" frameborder="0" width="850" height="760"></iframe>
+      <!-- <div id="proshow"></div> -->
+      <div id="csschange"></div>
+      <div id="canvasapp"></div>
+    </div>
+    <div id="rightDiv">
+      <span id="usernameinfo">请登录</span>
+      <!-- <div class="ball"></div> -->
+      <div id="wordrolling">
+        <div id="rollone">我是来凑热闹的</div>
+        <div id="rolltwo">我也是来凑热闹的</div>
+      </div>
+      <div id="fastener">
+        <a class="fastener" href="http://www.baidu.com" target="_blank"><svg width="100%" height="100%" viewBox="0 0 100 100"><path d="M 0,50 a 50,50 0 1,1 0,.001" id="textpath1"></path><text transform="rotate(-90,50,50)"><textPath startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#textpath1" baseline-shift="-.7em">baidu</textPath></text></svg><span></span></a>
+        <a class="fastener" href="http://www.youku.com" target="_blank"><svg width="100%" height="100%" viewBox="0 0 100 100"><path d="M 0,50 a 50,50 0 1,1 0,.001" id="textpath1"></path><text transform="rotate(-90,50,50)"><textPath startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#textpath1" baseline-shift="-.7em">youku</textPath></text></svg><span></span></a>
+        <a class="fastener" href="http://www.sina.com" target="_blank"><svg width="100%" height="100%" viewBox="0 0 100 100"><path d="M 0,50 a 50,50 0 1,1 0,.001" id="textpath1"></path><text transform="rotate(-90,50,50)"><textPath startOffset="50%" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#textpath1" baseline-shift="-.7em">sina</textPath></text></svg><span></span></a>
+      </div>
+      <div id="timeing">
+        <canvas id="canvas">
+        当前浏览器不支持Canvas，请更换浏览器后再试
+        </canvas>
+      </div>
+    </div>
+  </div>
+  <div class="maskLayer" id="imgMask"></div>
+  <img src="images/load.png" alt="" id="imgLoad" class="loading">
+  <script type="text/javascript" src="js/login.js"></script>
+  <script type="text/javascript" src="js/mainPage.js"></script>
+  <script type="text/javascript" src="js/page.js"></script>
+  <script type="text/javascript" src="canvas/js/digit.js"></script>
+  <script type="text/javascript" src="canvas/js/countdown.js"></script>
+  <script>
+    /*$('#pageTool').Paging({pagesize:10,count:100,callback:function(page,size,count){
+      console.log(arguments)
+      alert('当前第 ' +page +'页,每页 '+size+'条,总页数：'+count+'页')
+      }});*/
+    var pageBar = $('#pageToolbar').Paging({pagesize:10,count:10,toolbar:true});
+  </script>
+</body>
+</html>

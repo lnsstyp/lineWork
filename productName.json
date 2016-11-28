@@ -1,0 +1,47 @@
+{
+  "水果": {
+    "苹果": "apple",
+    "香蕉": "banana",
+    "鸭梨": "yali",
+    "葡萄": "putao",
+    "西瓜": "xigua",
+    "哈密瓜": "hamigua",
+    "猕猴桃": "mihoutao"
+  },
+  "蔬菜": {
+    "青椒": "qingjiao",
+    "香菜": "xiangcai",
+    "蒜台": "suantai",
+    "白菜": "baicai",
+    "豆角": "bean",
+    "油麦菜": "youmaicai",
+    "胡萝卜": "huluobo"
+  },
+  "食品": {
+    "薯片": "shupian",
+    "饼干": "binggan",
+    "瓜子": "guazi",
+    "辣条": "latiao",
+    "糖果": "tangguo",
+    "火腿肠": "huotuichang",
+    "方便面": "fangbianmian"
+  },
+  "饮品": {
+    "百事": "baishi",
+    "可乐": "kele",
+    "奶茶": "naicha",
+    "牛奶": "milk",
+    "咖啡": "coffee",
+    "美年达": "meinianda",
+    "果粒橙": "guolicheng"
+  },
+  "主食":{
+    "米饭": "rice",
+    "馒头": "mantou",
+    "烙饼": "miantiao",
+    "面条": "nuddles",
+    "水饺": "chumpling",
+    "疙瘩汤": "gedatang",
+    "麻辣烫": "malatang"
+  }
+}

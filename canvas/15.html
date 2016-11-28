@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video</title>
+  <style type="text/css">
+    .floatingControls{
+      position: absolute;
+      left: 175px;
+      top: 300px;
+    }
+    #canvas{
+      background: #ffffff;
+      border: thin solid #aaaaaa;
+    }
+    #video{
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <video src="../vedio/congcong.mp4" controls id="video"></video>
+  <canvas id="canvas" width="480" height="270"></canvas>
+  <div id="controls" class="floatingControls">
+    <input type="button" value="Play" id="controlButton">
+    <input type="checkbox" checked id="colorCheckbox">Color
+    <input type="checkbox" id="flipCheckbox">Flip
+  </div>
+  <script type="text/javascript" src="js/requestNextAnimationFrame.js"></script>
+  <script type="text/javascript">
+    var canvas = document.getElementById('canvas'),
+      context = canvas.getContext("2d"),
+      offscreenCanvas = document.createElement('canvas'),
+      offscreenContext = offscreenCanvas.getContext("2d"),
+      video = document.getElementById('video'),
+      controlButton = document.getElementById('controlButton'),
+      flipCheckbox = document.getElementById('flipCheckbox'),
+      colorCheckbox = document.getElementById('colorCheckbox'),
+      imageData,
+      poster = new Image();
+
+    function removeColor () {
+      var data, width, average;
+      imageData = offscreenContext.getImageData(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+      data = imageData.data;
+      //width = data.width;
+      for (var i = 0; i < data.length - 4; i += 4) {
+        average = (data[i] + data[i + 1] + data[i + 2]) / 3;
+        data[i] = average;
+        data[i + 1] = average;
+        data[i + 2] = average;
+      };
+      offscreenContext.putImageData(imageData, 0, 0);
+    }
+
+    function drawFlipped () {
+      context.save();
+      context.translate(canvas.width / 2, canvas.height / 2);
+      context.rotate(Math.PI);
+      context.translate(-canvas.width / 2, -canvas.height / 2);
+      context.drawImage(offscreenCanvas, 0, 0);
+      context.restore();
+    }
+
+    function nextVideoFrame () {
+      if (video.ended) {
+        controlButton.value = 'Play';
+      }else{
+        offscreenContext.drawImage(video, 0, 0);
+        if (!colorCheckbox.checked) {
+          removeColor();
+        };
+        if (flipCheckbox.checked) {
+          drawFlipped();
+        }else{
+          context.drawImage(offscreenCanvas, 0, 0);
+        }
+        requestNextAnimationFrame(nextVideoFrame);
+      }
+    }
+
+    function startPlaying () {
+      requestNextAnimationFrame(nextVideoFrame);
+      video.play();
+    }
+
+    function stopPlaying () {
+      video.pause();
+    }
+
+    controlButton.onclick = function (e) {
+      if (controlButton.value === 'Play') {
+        startPlaying();
+        controlButton.value = 'Pause';
+      }else{
+        stopPlaying();
+        controlButton.value = 'Play';
+      }
+    }
+
+    poster.onload = function () {
+      context.drawImage(poster, 0, 0);
+    }
+
+    poster.src = '../images/ccnn.png';
+    offscreenCanvas.width = canvas.width;
+    offscreenCanvas.height = canvas.height;
+
+
+  </script>
+</body>
+</html>

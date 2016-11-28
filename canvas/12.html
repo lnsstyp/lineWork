@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rubber bands with layered elements</title>
+
+  <style>
+    body{
+      background: rgba(100, 145, 250, 0.3);
+    }
+    #canvas{
+      margin-left: 20px;
+      margin-right: 0;
+      margin-bottom: 20px;
+      border: thin solid #aaaaaa;
+      cursor: crosshair;
+      padding: 0;
+    }
+    #controls{
+      margin: 20px 0px 20px 20px;
+    }
+    #rubberbandDiv{
+      position: absolute;
+      border: 3px solid blue;
+      cursor: crosshair;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <input type="button" value="change1" id="negativeButton">
+    <input type="button" value="change2" id="drawInColorToggleCheckbox">
+    <input type="button" value="change3" id="embossButton">
+  </div>
+  <div id="rubberbandDiv"></div>
+  <canvas id="canvas" width="750" height="520">Canvas not supported</canvas>
+  <script type="text/javascript">
+    var canvas = document.getElementById('canvas'),
+      context = canvas.getContext("2d"),
+      image = new Image(),
+      negativeButton = document.getElementById('negativeButton'),
+      drawInColorToggleCheckbox = document.getElementById('drawInColorToggleCheckbox'),
+      embossButton = document.getElementById('embossButton');
+    negativeButton.onclick = function () {
+      var imagedata = context.getImageData(0, 0, canvas.width, canvas.height),
+        data = imagedata.data;
+      for (var i = 0; i < data.length - 4; i += 4) {
+        data[i] = 255 - data[i+1];
+        data[i + 1] = 255 - data[i + 1];
+        data[i + 2] = 255 - data[i + 2];
+      };
+      context.putImageData(imagedata, 0, 0);
+    }
+    drawInColorToggleCheckbox.onclick = function () {
+      var data = undefined,
+        i = 0,
+        average;
+      imagedata = context.getImageData(0, 0, canvas.width, canvas.height);
+      data = imagedata.data;
+      for (var i = 0; i < data.length - 4; i += 4) {
+        average = (data[i] + data[i + 1] + data[i + 2]) / 3;
+        data[i] = average;
+        data[i + 1] = average;
+        data[i + 2] = average;
+      };
+      context.putImageData(imagedata, 0, 0);
+    }
+    embossButton.onclick = function () {
+      var imagedata, data, length, width, index = 3;
+      imagedata = context.getImageData(0, 0, canvas.width, canvas.height);
+      data = imagedata.data;
+      width = imagedata.width;
+      length = data.length;
+      for (var i = 0; i < length; i++) {
+        if (i < length - width * 4) {
+          if ((i + 1) % 4 !== 0) {
+            if ((i + 4) % (width * 4) == 0) {
+              data[i] = data[i - 4];
+              data[i + 1] = data[i - 3];
+              data[i + 2] = data[i - 2];
+              data[i + 3] = data[i - 1];
+              i += 4;
+            }else{
+              data[i] = 255 / 2 + 2 * data[i] - data[i + 4] - data[i + width * 4];
+            }
+          };
+        }else{
+          if ((i + 1) % 4 !== 0) {
+            data[i] = data[i - width * 4];
+          };
+        }
+      };
+      context.putImageData(imagedata, 0, 0);
+    }
+    image.src = 'images/curved-road.jpg';
+    image.onload = function () {
+      context.drawImage(image, 0, 0, image.width, image.height, 0, 0, context.canvas.width, context.canvas.height);
+    }
+
+  </script>
+</body>
+</html>

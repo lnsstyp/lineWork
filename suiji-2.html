@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>随机动画</title>
+  <link rel="shortcut icon" type="image/x-icon" href="images/mainpage.ico">
+  <link rel="stylesheet" type="text/css" href="css/demo.css">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body id="backwall">
+  <div id="introduce">
+    <h1 id="highlinght">张海程</h1>
+    <h2>年龄：二十五</h2>
+    <h2>学历：本科</h2>
+    <h2>专业技能：前端相关知识等</h2>
+    <h2>自我评价：积极上进、学习性强</h2>
+  </div>
+  <div id="data" style="color:white"></div>
+  <input type="button" value='点我' onclick="zoom(this);" class="stopAnimate" />
+  <div id="my3dspace">
+    <div id="pagegroup">
+      <img src="images/leftdoor.jpg" id="imgone" class="opendoor"><img src="images/rightdoor.jpg" id="imgtwo" class="opendoor">
+    </div>
+  </div>
+  <div class="d3" id="d3">
+    <div class="d7"><a href="resume.htm" target="view_window">个人简介</a></div>
+    <div class="d8"><a href="web.html">前端页面效果</a></div>
+    <div class="path">
+        <img src="images/zhc.png" alt="" class="avatar my_img">
+    </div>
+  </div>
+  <div id="counts"></div>
+  <script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+  <script type="text/javascript" src="js/demo.js"></script>
+  <script type="text/javascript">
+    $("#counts").click(function() {
+      window.location = "langpohan/index.html";
+    });
+  </script>
+</body>
+</html>
